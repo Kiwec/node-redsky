@@ -34,9 +34,9 @@ EventLoop.prototype.initSock = function (sock) {
 // Registers an event
 EventLoop.prototype.on = function (name, callback) {
   if(typeof this.sockEvents[name] === 'undefined') {
-    this.sockEvents[name] = [];
+    this.eventList[name] = [];
   }
-  this.sockEvents[name].push(callback);
+  this.eventList[name].push(callback);
 };
 
 module.exports = new EventLoop();
