@@ -17,6 +17,7 @@ SkyChat.on('log_once', function() {
   SkyChat.send('Hello World !');
 });
 SkyChat.on('newmessage', function(msg) {
-  console.log(SkyChat.messageHandler.format(msg));
+  console.log(SkyChat.format(msg));
 });
+// Autres events : command, givepoints, rand
 ```
