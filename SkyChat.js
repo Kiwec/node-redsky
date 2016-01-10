@@ -1,5 +1,3 @@
-var EventLoop = require('./EventLoop.js');
-
 // - config = {
 //   address: 'http://skychat.fr:8054',
 //   username: '',
@@ -8,7 +6,7 @@ var EventLoop = require('./EventLoop.js');
 // }
 function SkyChat(config) {
   this.config = config;
-  this.eventLoop = new EventLoop(this);
+  this.eventLoop = require('./EventLoop.js');
   this.lastMessage = '!';
   this.loggedIn = false;
   this.messageHandler = require('./MessageHandler.js');
