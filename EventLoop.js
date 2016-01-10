@@ -20,7 +20,7 @@ EventLoop.prototype.initSock = function (sock) {
   }
   for (var i in this.sockEvents) {
     sock.on(this.sockEvents[i], eventCaller.bind({
-      fire: this.fire,
+      fire: this.fire.bind(this),
       name: this.sockEvents[i]
     }));
   }
