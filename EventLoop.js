@@ -1,6 +1,10 @@
 function EventLoop() {
   this.eventList = [];
-  this.sockEvents = ['alert', 'connected_list', 'error', 'info', 'success'];
+  this.sockEvents = ['alert', 'ban', 'clear', 'connect', 'connected_list',
+                    'disconnect', 'error', 'forcepost', 'forcereload', 'info',
+                    'log', 'message', 'message_delete', 'play_sound',
+                    'room_list', 'seen', 'set_room_data', 'shake', 'success',
+                    'typing_list', 'youtube_search'];
 }
 
 // Fires an event
