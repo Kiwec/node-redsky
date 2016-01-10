@@ -80,11 +80,12 @@ MessageHandler.prototype.handleBotMessage = function (msg) {
 
   // Points transfer
 	if(cleanMsg.indexOf('de commission') !== -1) {
-		var giveMsg = msg.message.match(/<b>(.*?)<\/b>/g);
+		var giveMsg = msg.message.match(/<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>/);
 		this.skyChat.eventLoop.fire('givepoints', {
-			from: Util.removeHTML(giveMsg[2]),
-			amount: parseInt(Util.removeHTML(giveMsg[1]), 10),
-			to: Util.removeHTML(giveMsg[0])
+			from: giveMsg[3],
+			amount: parseInt(giveMsg[2], 10),
+			to: giveMsg[1],
+			commission: giveMsg[4]
 		});
 	// Random number generation
 	} else if(cleanMsg.indexOf('tiré par') !== -1) {
