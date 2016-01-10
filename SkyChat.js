@@ -1,3 +1,5 @@
+var EventLoop = require('./EventLoop.js');
+
 // - config = {
 //   address: 'http://redsky.fr:8054',
 //   username: '',
@@ -6,7 +8,7 @@
 // }
 function SkyChat(config) {
   this.config = config;
-  this.eventLoop = require('./EventLoop.js');
+  this.eventLoop = new EventLoop(this);
   this.lastMessage = '!';
   this.loggedIn = false;
   this.messageHandler = require('./MessageHandler.js');
@@ -15,7 +17,6 @@ function SkyChat(config) {
   this.eventLoop.initSock(this.sock);
   this.eventLoop.on('connect', this.handleConnect.bind(this));
   this.eventLoop.on('log', this.handleLogin.bind(this));
-  this.messageHandler.init(this);
 }
 
 SkyChat.prototype.handleConnect = function () {
@@ -74,4 +75,4 @@ SkyChat.prototype.sendLater = function(msg, delay) {
 	setTimeout((function() { this.send(msg); }).bind(this), delay);
 };
 
-module.exports = new SkyChat();
+module.exports = SkyChat;
