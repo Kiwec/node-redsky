@@ -71,7 +71,7 @@ MessageHandler.prototype.handle = function (msg) {
   this.lastTms = msg.tms;
 
   if(msg.message.indexOf('!') === 0) this.handleCommand(msg);
-  else if(msg.message.pseudo == 'RedSkyBot') this.handleBotMessage(msg);
+  else if(msg.pseudo == 'RedSkyBot') this.handleBotMessage(msg);
   else this.skyChat.eventLoop.fire('newmessage', msg);
 };
 
