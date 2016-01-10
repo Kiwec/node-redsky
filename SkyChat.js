@@ -1,3 +1,5 @@
+var MessageHandler = require('./MessageHandler.js');
+
 // - config = {
 //   address: 'http://redsky.fr:8054',
 //   username: '',
@@ -9,7 +11,7 @@ function SkyChat(config) {
   this.eventLoop = require('./EventLoop.js');
   this.lastMessage = '!';
   this.loggedIn = false;
-  this.messageHandler = require('./MessageHandler.js');
+  this.messageHandler = new MessageHandler(this);
   this.sock = require('socket.io-client').connect(config.address);
 
   this.eventLoop.initSock(this.sock);

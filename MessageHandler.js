@@ -1,7 +1,8 @@
 var $ = require('cheerio').load('');
 var colors = require('colors/safe');
 
-function MessageHandler() {
+function MessageHandler(skyChat) {
+  this.skyChat = skyChat;
   this.lastTms = 0;
 }
 
@@ -107,8 +108,4 @@ MessageHandler.prototype.handleCommand = function (msg) {
 	});
 };
 
-MessageHandler.prototype.init = function (skyChat) {
-  this.skyChat = skyChat;
-};
-
-module.exports = new MessageHandler();
+module.exports = MessageHandler;
