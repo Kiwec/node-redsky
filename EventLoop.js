@@ -9,10 +9,11 @@ function EventLoop() {
 
 // Fires an event
 EventLoop.prototype.fire = function (name, args) {
-  console.log('EventLoop : Event "' + name + '" fired.');
+  // console.log('EventLoop : Event "' + name + '" fired.');
   if(typeof this.eventList[name] === 'undefined') return;
   for (var i in this.eventList[name]) {
-    console.log('EventLoop : Calling callback number ' + i + ' for event "' + name + '"');
+    // console.log('EventLoop : Calling callback number ' + i +
+    //             ' for event "' + name + '"');
     this.eventList[name][i](args);
   }
 };
