@@ -17,6 +17,10 @@ function SkyChat(config) {
   this.eventLoop.on('log', this.handleLogin.bind(this));
 }
 
+SkyChat.prototype.format = function (msg) {
+  return this.messageHandler.format(msg);
+};
+
 SkyChat.prototype.handleConnect = function () {
   function login(err, res, body) {
     if(err) return console.log(err);
@@ -61,6 +65,10 @@ SkyChat.prototype.handleServerInfo = function (msg) {
 
 SkyChat.prototype.mp = function (user, str) {
 	this.send('/w ' + user + ' ' + str);
+};
+
+SkyChat.prototype.on = function (name, callback) {
+  this.eventLoop.on(name, callback);
 };
 
 SkyChat.prototype.send = function(message) {
