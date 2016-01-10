@@ -52,7 +52,7 @@ SkyChat.prototype.handleLogin = function (log) {
   this.eventLoop.on('info', this.handleServerInfo.bind(this));
   this.eventLoop.on('success', this.handleServerInfo.bind(this));
   setTimeout((function () {
-    this.eventLoop.on('message', this.messageHandler.bind(this.messageHandler));
+    this.on('message', this.messageHandler.handle.bind(this.messageHandler));
   }).bind(this), 1000);
 };
 
