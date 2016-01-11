@@ -40,6 +40,7 @@ SkyChat.prototype.handleConnect = function () {
 			mobile: this.config.mobile
     });
   }
+  if(this.config.password === '') throw 'Password is "" ! Stopping.';
   require('request').post({
     url: 'http://skychat.fr/ajax/account/api.php',
     form: {
