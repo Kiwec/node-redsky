@@ -13,11 +13,16 @@ function SkyChat(config) {
   this.loggedIn = false;
   this.messageHandler = new MessageHandler(this);
   this.sock = require('socket.io-client').connect(config.address);
+  this.userList = {};
 
   this.eventLoop.initSock(this.sock);
   this.eventLoop.on('connect', this.handleConnect.bind(this));
   this.eventLoop.on('log', this.handleLogin.bind(this));
 }
+
+SkyChat.prototype.fire = function (name, args) {
+  this.eventLoop.fire(name, args);
+};
 
 SkyChat.prototype.format = function (msg) {
   return this.messageHandler.format(msg);
@@ -44,13 +49,18 @@ SkyChat.prototype.handleConnect = function () {
   }, login.bind(this));
 };
 
+SkyChat.prototype.handleConnectedList = function (list) {
+  this.userList = list;
+};
+
 SkyChat.prototype.handleLogin = function (log) {
   if(this.loggedIn) return;
   this.loggedIn = true;
-  this.eventLoop.fire('log_once', log);
-  this.eventLoop.on('alert', this.handleServerInfo.bind(this));
-  this.eventLoop.on('info', this.handleServerInfo.bind(this));
-  this.eventLoop.on('success', this.handleServerInfo.bind(this));
+  this.fire('log_once', log);
+  this.on('alert', this.handleServerInfo.bind(this));
+  this.on('info', this.handleServerInfo.bind(this));
+  this.on('success', this.handleServerInfo.bind(this));
+  this.on('connected_list', this.handleConnectedList.bind(this));
   setTimeout((function () {
     this.on('message', this.messageHandler.handle.bind(this.messageHandler));
   }).bind(this), 1000);
