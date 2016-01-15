@@ -59,6 +59,7 @@ SkyChat.prototype.handleLogin = function (log) {
   this.loggedIn = true;
   this.fire('log_once', log);
   this.on('alert', this.handleServerInfo.bind(this));
+	this.on('error', this.handleServerInfo.bind(this));
   this.on('info', this.handleServerInfo.bind(this));
   this.on('success', this.handleServerInfo.bind(this));
   this.on('connected_list', this.handleConnectedList.bind(this));
