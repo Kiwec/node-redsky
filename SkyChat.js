@@ -7,18 +7,35 @@ var MessageHandler = require('./MessageHandler.js');
 //   mobile: false
 // }
 function SkyChat(config) {
-  this.config = config;
-  this.eventLoop = require('./EventLoop.js');
-  this.lastMessage = '!';
-  this.loggedIn = false;
+
+	this.lastMessage = '!';
   this.messageHandler = new MessageHandler(this);
-  this.sock = require('socket.io-client').connect(config.address);
   this.userList = {};
 
+	// Legacy compatibility
+	if(typeof config !== 'undefined') {
+		this.init(config);
+	}
+}
+
+SkyChat.prototype.init = function(config)
+{
+	// If the SkyChat object has already been initialized
+	if(typeof this.config !== 'undefined') {
+		// Return current SkyChat object
+		return this;
+	}
+
+	this.config = config;
+
+	this.eventLoop = require('./EventLoop.js');
+	this.sock = require('socket.io-client').connect(config.address);
   this.eventLoop.initSock(this.sock);
   this.eventLoop.on('connect', this.handleConnect.bind(this));
   this.eventLoop.on('log', this.handleLogin.bind(this));
-}
+	
+	return this;
+};
 
 SkyChat.prototype.fire = function (name, args) {
   this.eventLoop.fire(name, args);
@@ -55,8 +72,6 @@ SkyChat.prototype.handleConnectedList = function (list) {
 };
 
 SkyChat.prototype.handleLogin = function (log) {
-  if(this.loggedIn) return;
-  this.loggedIn = true;
   this.fire('log_once', log);
   this.on('alert', this.handleServerInfo.bind(this));
 	this.on('error', this.handleServerInfo.bind(this));
