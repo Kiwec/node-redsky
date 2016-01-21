@@ -70,8 +70,12 @@ MessageHandler.prototype.handle = function (msg) {
   if(msg.tms < this.lastTms) return;
   this.lastTms = msg.tms;
 
-  if(msg.message.indexOf('!') === 0) this.handleCommand(msg);
-  else if(msg.pseudo == 'RedSkyBot') this.handleBotMessage(msg);
+	if(msg.message.indexOf('!') === 0) {
+		this.handleCommand(msg);
+		return;
+	}
+
+  if(msg.pseudo == 'RedSkyBot') this.handleBotMessage(msg);
   else this.skyChat.eventLoop.fire('newmessage', msg);
 };
 
