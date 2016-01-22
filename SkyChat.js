@@ -105,4 +105,4 @@ SkyChat.prototype.sendLater = function(msg, delay) {
 	setTimeout((function() { this.send(msg); }).bind(this), delay);
 };
 
-module.exports = SkyChat;
+module.exports = new SkyChat();
