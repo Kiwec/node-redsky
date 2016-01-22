@@ -6,16 +6,11 @@ var MessageHandler = require('./MessageHandler.js');
 //   password: '',
 //   mobile: false
 // }
-function SkyChat(config) {
-
+function SkyChat()
+{
 	this.lastMessage = '!';
   this.messageHandler = new MessageHandler(this);
   this.userList = {};
-
-	// Legacy compatibility
-	if(typeof config !== 'undefined') {
-		this.init(config);
-	}
 }
 
 SkyChat.prototype.init = function(config)
