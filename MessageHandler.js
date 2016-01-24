@@ -75,8 +75,11 @@ MessageHandler.prototype.handle = function (msg) {
 		return;
 	}
 
-  if(msg.pseudo == 'RedSkyBot') this.handleBotMessage(msg);
-  else this.skyChat.eventLoop.fire('newmessage', msg);
+  if(msg.pseudo == 'RedSkyBot') {
+    this.handleBotMessage(msg);
+  }
+  
+  this.skyChat.eventLoop.fire('newmessage', msg);
 };
 
 MessageHandler.prototype.handleBotMessage = function (msg) {
