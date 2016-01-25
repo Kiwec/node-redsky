@@ -8,10 +8,19 @@ var MessageHandler = require('./MessageHandler.js');
 // }
 function SkyChat()
 {
-	this.lastMessage = '!';
   this.messageHandler = new MessageHandler(this);
   this.userList = {};
+	this.messageBuffer = [];
+	this.lastMessage = '!';
 }
+
+SkyChat.prototype.checkMessageBuffer = function()
+{
+	if(this.messageBuffer.length > 0) {
+		this.lastMessage = this.messageBuffer.shift();
+		this.sock.emit('message', { message: this.lastMessage });
+	}
+};
 
 SkyChat.prototype.init = function(config)
 {
@@ -76,6 +85,7 @@ SkyChat.prototype.handleLogin = function (log) {
   setTimeout((function () {
     this.on('message', this.messageHandler.handle.bind(this.messageHandler));
   }).bind(this), 1000);
+	setInterval(this.checkMessageBuffer.bind(this), 400);
 };
 
 SkyChat.prototype.handleServerInfo = function (msg) {
@@ -83,7 +93,7 @@ SkyChat.prototype.handleServerInfo = function (msg) {
   this.eventLoop.fire('server_info', msg);
   var match = msg.message.match(/attendre (.*?) millis/);
 	if(match && match.length == 2 && typeof this.lastMessage !== 'undefined') {
-  	this.sendLater(this.lastMessage, match[1]);
+		this.messageBuffer.unshift(this.lastMessage);
 	}
 };
 
@@ -96,8 +106,7 @@ SkyChat.prototype.on = function (name, callback) {
 };
 
 SkyChat.prototype.send = function(message) {
-	this.sock.emit('message', { message: message });
-	this.lastMessage = message;
+	this.messageBuffer.push(message);
 };
 
 SkyChat.prototype.sendLater = function(msg, delay) {
