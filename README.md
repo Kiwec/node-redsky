@@ -5,7 +5,7 @@ Librairie NodeJS permettant de se connecter au chat redsky.fr.
 # Installation
 
 ```sh
-$ npm install -S kiwec/node-redsky
+$ npm install -S node-redsky
 ```
 
 # Utilisation
