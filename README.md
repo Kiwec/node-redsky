@@ -5,7 +5,7 @@ Librairie NodeJS permettant de se connecter au chat skychat.fr.
 # Installation
 
 ```sh
-$ npm install -S kiwec/node-skychat
+$ npm install -S node-skychat
 ```
 
 # Utilisation
