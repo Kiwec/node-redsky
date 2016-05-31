@@ -12,17 +12,15 @@ $ npm install -S node-skychat
 
 ```js
 var SkyChat = require('node-skychat').init({
-	address: 'http://skychat.fr:8054',
 	username: 'foo',
-	password: 'bar',
-	mobile: false
+	password: 'bar123'
 });
 
-SkyChat.on('log_once', function() {
-  SkyChat.send('Hello World !');
+SkyChat.on('log', () => {
+  SkyChat.send('Hello world !');
 });
 
-SkyChat.on('newmessage', function(msg) {
+SkyChat.on('newmessage', (msg) => {
   console.log(SkyChat.format(msg));
 });
 ```

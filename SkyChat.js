@@ -1,10 +1,8 @@
 var MessageHandler = require('./MessageHandler.js');
 
 // - config = {
-//   address: 'http://skychat.fr:8054',
 //   username: '',
-//   password: '',
-//   mobile: false
+//   password: ''
 // }
 function SkyChat()
 {
@@ -33,11 +31,10 @@ SkyChat.prototype.init = function(config)
 	this.config = config;
 
 	this.eventLoop = require('./EventLoop.js');
-	this.sock = require('socket.io-client').connect(config.address);
+	this.sock = require('socket.io-client').connect('http://skychat.fr:8056');
   this.eventLoop.initSock(this.sock);
   this.eventLoop.on('connect', this.handleConnect.bind(this));
-  this.eventLoop.on('log', this.handleLogin.bind(this));
-	
+
 	return this;
 };
 
@@ -53,17 +50,13 @@ SkyChat.prototype.handleConnect = function () {
   function login(err, res, body) {
     if(err) return console.log(err);
     body = JSON.parse(body);
-    this.sock.emit('log', {
-      hash: body.hash,
-			pseudo: body.pseudo,
-			id: body.id,
-			tms: body.tms,
-			mobile: this.config.mobile
-    });
+    this.sock.emit('log', body);
+    this.send('/join 0');
+    this.handleLogin(body);
   }
   if(this.config.password === '') throw 'Password is "" ! Stopping.';
   require('request').post({
-    url: 'http://skychat.fr/ajax/account/api.php',
+    url: 'http://skychat.fr/ajax/account/api2.php',
     form: {
       pseudo: this.config.username,
       pass: this.config.password
@@ -76,6 +69,7 @@ SkyChat.prototype.handleConnectedList = function (list) {
 };
 
 SkyChat.prototype.handleLogin = function (log) {
+  this.fire('log', log);
   this.fire('log_once', log);
   this.on('alert', this.handleServerInfo.bind(this));
 	this.on('error', this.handleServerInfo.bind(this));
