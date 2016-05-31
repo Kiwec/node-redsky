@@ -78,7 +78,7 @@ MessageHandler.prototype.handle = function (msg) {
   if(msg.pseudo == 'SkychatBot') {
     this.handleBotMessage(msg);
   }
-  
+
   this.skyChat.eventLoop.fire('newmessage', msg);
 };
 
