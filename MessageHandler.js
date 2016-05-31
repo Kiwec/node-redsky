@@ -10,7 +10,7 @@ MessageHandler.prototype.clean = function (msg) {
   var str = msg;
   if(typeof msg === 'undefined') return 'undefined';
   if(typeof msg.message !== 'undefined') str = msg.message;
-  str = msg.substring(1);
+  str = str.substring(1);
   var noSmiley = str.replace(/<img.*?alt="(.*?)".*?>/g, '$1');
   var noImg = noSmiley.replace(/<img.?src="(.*?)".*?>/g, 'http://skychat.fr/$1');
   var noHTML = $('<p>' + noImg + '</p>').text();
