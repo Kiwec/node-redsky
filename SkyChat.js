@@ -29,14 +29,17 @@ SkyChat.prototype.init = function(config)
 	}
 
 	this.config = config;
-
 	this.eventLoop = require('./EventLoop.js');
-	this.sock = require('socket.io-client').connect('http://skychat.fr:8056');
-  this.eventLoop.initSock(this.sock);
-  this.eventLoop.on('connect', this.handleConnect.bind(this));
+	this.getLoginToken(this.initSock.bind(this));
 
 	return this;
 };
+
+SkyChat.prototype.initSock = function() {
+	this.sock = require('socket.io-client').connect('http://skychat.fr:8056');
+	this.eventLoop.initSock(this.sock);
+	this.eventLoop.on('connect', this.handleConnect.bind(this));
+}
 
 SkyChat.prototype.fire = function (name, args) {
   this.eventLoop.fire(name, args);
@@ -46,22 +49,30 @@ SkyChat.prototype.format = function (msg) {
   return this.messageHandler.format(msg);
 };
 
+/**
+ * Obtient le token de login depuis l'API skychat.fr
+ * Appelle callback().
+ * En cas d'erreur : pas d'appel au callback.
+ */
+SkyChat.prototype.getLoginToken = function(callback) {
+	var request = require('request');
+	request.post({
+		url: 'http://skychat.fr/ajax/account/api2.php',
+		form: {
+			pseudo: this.config.username,
+			pass: this.config.password
+		}
+	}, (function(err, res, body) {
+		if(err) return console.log(err);
+		this.credentials = JSON.parse(body);
+		callback();
+	}).bind(this));
+};
+
 SkyChat.prototype.handleConnect = function () {
-  function login(err, res, body) {
-    if(err) return console.log(err);
-    body = JSON.parse(body);
-    this.sock.emit('log', body);
-    this.send('/join 0');
-    this.handleLogin(body);
-  }
-  if(this.config.password === '') throw 'Password is "" ! Stopping.';
-  require('request').post({
-    url: 'http://skychat.fr/ajax/account/api2.php',
-    form: {
-      pseudo: this.config.username,
-      pass: this.config.password
-    }
-  }, login.bind(this));
+	this.sock.emit('log', this.credentials);
+	this.send('/join 0');
+	this.handleLogin(this.credentials);
 };
 
 SkyChat.prototype.handleConnectedList = function (list) {
