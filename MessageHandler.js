@@ -84,6 +84,7 @@ MessageHandler.prototype.handle = function (msg) {
 };
 
 MessageHandler.prototype.handleBotMessage = function (msg) {
+	msg.message_type = 'bot_message';
   var cleanMsg = this.clean(msg);
 
   // Points transfer
