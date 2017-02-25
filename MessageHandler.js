@@ -71,7 +71,7 @@ MessageHandler.prototype.handle = function (msg) {
   if(msg.tms < this.lastTms) return;
   this.lastTms = msg.tms;
 
-	if(msg.message.indexOf('!') === 0) {
+	if(msg.message.indexOf('!') === 1) {
 		this.handleCommand(msg);
 		return;
 	}
