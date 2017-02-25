@@ -103,7 +103,7 @@ SkyChat.prototype.handleServerInfo = function (msg) {
 };
 
 SkyChat.prototype.mp = function (user, str) {
-	this.send('/w ' + user + ' ' + str);
+	this.send('/mp ' + user + ' ' + str);
 };
 
 SkyChat.prototype.on = function (name, callback) {
