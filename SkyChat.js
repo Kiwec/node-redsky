@@ -6,6 +6,7 @@ function SkyChat()
   this.userList = {};
 	this.messageBuffer = [];
 	this.lastMessage = '!';
+	this.current_room = -1;
 }
 
 SkyChat.prototype.checkMessageBuffer = function()
@@ -84,10 +85,26 @@ SkyChat.prototype.handleLogin = function (log) {
   this.on('info', this.handleServerInfo.bind(this));
   this.on('success', this.handleServerInfo.bind(this));
   this.on('connected_list', this.handleConnectedList.bind(this));
+	this.on('pseudo_info', this.handlePseudoInfo.bind(this));
+	this.on('room_list', (data) => {
+		for(var i in data) {
+			if(data[i].id == this.current_room) {
+				this.fire('room_name', data[i].name);
+				break;
+			}
+		}
+	});
   setTimeout((function () {
     this.on('message', this.messageHandler.handle.bind(this.messageHandler));
   }).bind(this), 1000);
 	setInterval(this.checkMessageBuffer.bind(this), 400);
+};
+
+SkyChat.prototype.handlePseudoInfo = function(data) {
+	if(this.current_room != data.current_room) {
+		this.current_room = data.current_room;
+		this.send('/roomlist');
+	}
 };
 
 SkyChat.prototype.handleServerInfo = function (msg) {
