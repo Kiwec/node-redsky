@@ -1,10 +1,11 @@
 function EventLoop() {
   this.eventList = [];
-  this.sockEvents = ['alert', 'ban', 'clear', 'connect', 'connected_list',
-                    'disconnect', 'error', 'forcepost', 'forcereload', 'info',
-                    'message', 'message_delete', 'play_sound',
-                    'room_list', 'seen', 'set_room_data', 'shake', 'success',
-                    'typing_list', 'youtube_search'];
+  this.sockEvents = ['alert', 'ban', 'clear', 'connect', 'connected_list', 
+	  'disconnect', 'error', 'forcepost', 'forcereload', 'info',
+	  'message', 'message_delete', 'play_sound', 'pseudo_info',
+	  'room_update', 'room_info', 'yt_room_history', 'yt_room_waitlist',
+	  'yt_sync', 'yt_search', 'mouse_position', 'mouse_destroy',
+	  'room_list', 'success', 'typing_list'];
 }
 
 // Fires an event
