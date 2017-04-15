@@ -1,9 +1,5 @@
 var MessageHandler = require('./MessageHandler.js');
 
-// - config = {
-//   username: '',
-//   password: ''
-// }
 function SkyChat()
 {
   this.messageHandler = new MessageHandler(this);
@@ -80,6 +76,7 @@ SkyChat.prototype.handleConnectedList = function (list) {
 };
 
 SkyChat.prototype.handleLogin = function (log) {
+	this.pseudo = log.pseudo;
   this.fire('log', log);
   this.fire('log_once', log);
   this.on('alert', this.handleServerInfo.bind(this));
