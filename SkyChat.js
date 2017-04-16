@@ -3,7 +3,6 @@ var MessageHandler = require('./MessageHandler.js');
 function SkyChat()
 {
   this.messageHandler = new MessageHandler(this);
-  this.userList = {};
 	this.messageBuffer = [];
 	this.lastMessage = '!';
 	this.current_room = -1;
@@ -72,10 +71,6 @@ SkyChat.prototype.handleConnect = function () {
 	this.handleLogin(this.credentials);
 };
 
-SkyChat.prototype.handleConnectedList = function (list) {
-  this.userList = list;
-};
-
 SkyChat.prototype.handleLogin = function (log) {
 	this.pseudo = log.pseudo;
   this.fire('log', log);
@@ -84,7 +79,6 @@ SkyChat.prototype.handleLogin = function (log) {
 	this.on('error', this.handleServerInfo.bind(this));
   this.on('info', this.handleServerInfo.bind(this));
   this.on('success', this.handleServerInfo.bind(this));
-  this.on('connected_list', this.handleConnectedList.bind(this));
 	this.on('pseudo_info', this.handlePseudoInfo.bind(this));
 	this.on('room_list', (data) => {
 		for(var i in data) {
