@@ -111,6 +111,7 @@ MessageHandler.prototype.handleCommand = function (msg) {
   var cleanMsg = this.clean(msg);
   var subArg = cleanMsg.indexOf(' ') + 1;
 	this.skyChat.eventLoop.fire('command', {
+		msg: msg,
 		user: msg.pseudo,
 		name: cleanMsg.substring(1).split(' ')[0],
 		args: subArg ? cleanMsg.substring(subArg) : '',
