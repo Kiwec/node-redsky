@@ -32,7 +32,7 @@ SkyChat.prototype.init = function(config)
 };
 
 SkyChat.prototype.initSock = function() {
-	this.sock = require('socket.io-client').connect('http://skychat.fr:8056');
+	this.sock = require('socket.io-client').connect('https://skychat.fr:8056');
 	this.eventLoop.initSock(this.sock);
 	this.eventLoop.on('connect', this.handleConnect.bind(this));
 }
@@ -53,7 +53,7 @@ SkyChat.prototype.format = function (msg) {
 SkyChat.prototype.getLoginToken = function(callback) {
 	var request = require('request');
 	request.post({
-		url: 'http://skychat.fr/ajax/account/api2.php',
+		url: 'https://skychat.fr/ajax/account/api2.php',
 		form: {
 			pseudo: this.config.username,
 			pass: this.config.password
