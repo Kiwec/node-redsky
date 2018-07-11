@@ -1,6 +1,6 @@
 {
   "name": "node-skychat",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "SkyChat.js",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
   },
   "homepage": "https://github.com/kiwec/node-skychat#readme",
   "dependencies": {
-    "cheerio": "^0.19.0",
+    "cheerio": "^0.22.0",
     "colors": "^1.1.2",
     "request": "^2.67.0",
-    "socket.io-client": "^1.4.3"
+    "socket.io-client": "^2.1.1"
   }
 }
