@@ -19,26 +19,14 @@ class Player {
 		this.user = '';
 	}
 
-	stop() {
-		update({
-			id: '',
-			title: '',
-			duration: 0,
-			position: 0,
-			user: ''
-		});
-	}
-
 	update(yt_sync) {
-		if(typeof yt_sync.id === 'undefined') return;
-
-		this.title = yt_sync.title;
-		this.position = yt_sync.cursor;
-		this.user = yt_sync.dj;
+		this.title = yt_sync.title || '';
+		this.position = yt_sync.cursor || 0;
+		this.user = yt_sync.dj || '';
 
 		if(yt_sync.id != this.id) {
-			this.id = yt_sync.id;
-			this.duration = yt_sync.duration;
+			this.id = yt_sync.id || null;
+			this.duration = yt_sync.duration || 0;
 
 			// Notify clients a new video is playing
 			this.skychat.fire('player_next', this);
