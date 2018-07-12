@@ -1,5 +1,6 @@
 const MessageHandler = require('./MessageHandler.js');
 const Player = require('./Player.js');
+const UserList = require('./UserList.js');
 
 class SkyChat {
 	constructor() {
@@ -27,6 +28,7 @@ class SkyChat {
 		this.config = config;
 		this.eventLoop = require('./EventLoop.js');
 		this.player = new Player(this);
+		this.userList = new UserList(this);
 		this.getLoginToken(this.initSock.bind(this));
 
 		return this;
@@ -81,6 +83,7 @@ class SkyChat {
 		this.on('info', this.handleServerInfo.bind(this));
 		this.on('success', this.handleServerInfo.bind(this));
 		this.on('pseudo_info', this.handlePseudoInfo.bind(this));
+		this.on('connected_list', data => this.userList.update(data));
 		this.on('yt_sync', data => this.player.update(data));
 		this.on('room_list', (data) => {
 			for(const i in data) {

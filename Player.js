@@ -30,6 +30,8 @@ class Player {
 	}
 
 	update(yt_sync) {
+		if(typeof yt_sync.id === 'undefined') return;
+
 		this.title = yt_sync.title;
 		this.position = yt_sync.cursor;
 		this.user = yt_sync.dj;
