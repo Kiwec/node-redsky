@@ -4,6 +4,7 @@ class UserList {
 		this.skychat = skychat;
 
 		this.users = [];
+		this.typing = [];
 	}
 
 	get(username) {
@@ -16,7 +17,17 @@ class UserList {
 		return null;
 	}
 
-	update(ev) {
+	update_typing(ev) {
+		this.typing = ev;
+
+		for(let user of this.users) {
+			user.typing = ev.includes(user.pseudo_lower);
+		}
+
+		this.skychat.fire('list', this.users);
+	}
+
+	update_users(ev) {
 		function evget(list, username) {
 			for(let user of list) {
 				if(user.pseudo_lower == username) {
@@ -40,6 +51,7 @@ class UserList {
 		}
 
 		this.users = ev.list;
+		update_typing(this.typing);
 	}
 }
 

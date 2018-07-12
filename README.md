@@ -33,6 +33,8 @@ Certains events sont ajoutes en plus de ceux du tchat :
 
 * givepoints({ from, amount, to, commission }) : apres envoi de skypoints
 
+* list(userlist) : quand un utilisateur rejoint, quitte, ou commence/arrete d'ecrire
+
 * log(credentials) : apres connexion
 
 * log_once(credentials) : apres connexion, emis une seule fois
@@ -47,6 +49,8 @@ Certains events sont ajoutes en plus de ceux du tchat :
 La room 0 est automatiquement rejointe.
 
 * server_info(msg) : message important du serveur
+
+* typing(userlist) : quand un utilisateur commence/arrete d'ecrire
 
 * user_join(user) : quand un utilisateur rejoint la room
 
