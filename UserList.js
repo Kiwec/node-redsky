@@ -51,7 +51,7 @@ class UserList {
 		}
 
 		this.users = ev.list;
-		update_typing(this.typing);
+		this.update_typing(this.typing);
 	}
 }
 
