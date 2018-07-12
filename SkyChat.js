@@ -8,7 +8,7 @@ class SkyChat {
 		this.messageBuffer = [];
 		this.lastMessage = '!';
 		this.current_room = -1;
-
+		this.first_login = true;
 	}
 
 	checkMessageBuffer() {
@@ -72,12 +72,15 @@ class SkyChat {
 		this.sock.emit('log', this.credentials);
 		this.send('/join 0');
 		this.handleLogin(this.credentials);
+		this.first_login = false;
 	}
 
 	handleLogin(log) {
 		this.pseudo = log.pseudo;
 		this.fire('log', log);
-		this.fire('log_once', log);
+		if(this.first_login) {
+			this.fire('log_once', log);
+		}
 		this.on('alert', this.handleServerInfo.bind(this));
 		this.on('error', this.handleServerInfo.bind(this));
 		this.on('info', this.handleServerInfo.bind(this));
