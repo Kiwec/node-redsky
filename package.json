@@ -1,6 +1,6 @@
 {
   "name": "node-skychat",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "main": "SkyChat.js",
   "repository": {
     "type": "git",

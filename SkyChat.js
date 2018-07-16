@@ -9,6 +9,7 @@ class SkyChat {
 		this.lastMessage = '!';
 		this.current_room = -1;
 		this.first_login = true;
+		this.eventLoop = require('./EventLoop.js');
 	}
 
 	checkMessageBuffer() {
@@ -26,7 +27,6 @@ class SkyChat {
 		}
 
 		this.config = config;
-		this.eventLoop = require('./EventLoop.js');
 		this.player = new Player(this);
 		this.userList = new UserList(this);
 		this.getLoginToken(this.initSock.bind(this));
@@ -72,7 +72,6 @@ class SkyChat {
 		this.sock.emit('log', this.credentials);
 		this.send('/join 0');
 		this.handleLogin(this.credentials);
-		this.first_login = false;
 	}
 
 	handleLogin(log) {
@@ -80,6 +79,7 @@ class SkyChat {
 		this.fire('log', log);
 		if(this.first_login) {
 			this.fire('log_once', log);
+			this.first_login = false;
 		}
 		this.on('alert', this.handleServerInfo.bind(this));
 		this.on('error', this.handleServerInfo.bind(this));
