@@ -102,6 +102,7 @@ class SkyChat {
 		setInterval(this.checkMessageBuffer.bind(this), 400);
 
 		this.first_login = false;
+		this.fire('log_once', log);
 	}
 
 	handlePseudoInfo(data) {
