@@ -72,15 +72,13 @@ class SkyChat {
 		this.sock.emit('log', this.credentials);
 		this.send('/join 0');
 		this.handleLogin(this.credentials);
+		this.fire('log', log);
+		this.pseudo = log.pseudo;
 	}
 
 	handleLogin(log) {
-		this.pseudo = log.pseudo;
-		this.fire('log', log);
-		if(this.first_login) {
-			this.fire('log_once', log);
-			this.first_login = false;
-		}
+		if(!this.first_login) return;
+
 		this.on('alert', this.handleServerInfo.bind(this));
 		this.on('error', this.handleServerInfo.bind(this));
 		this.on('info', this.handleServerInfo.bind(this));
@@ -101,6 +99,8 @@ class SkyChat {
 			this.on('message', this.messageHandler.handle.bind(this.messageHandler));
 		}, 1000);
 		setInterval(this.checkMessageBuffer.bind(this), 400);
+
+		this.first_login = false;
 	}
 
 	handlePseudoInfo(data) {
