@@ -72,8 +72,9 @@ class SkyChat {
 		this.sock.emit('log', this.credentials);
 		this.send('/join 0');
 		this.handleLogin(this.credentials);
-		this.fire('log', log);
-		this.pseudo = log.pseudo;
+
+		this.pseudo = this.credentials.pseudo;
+		this.fire('log', this.credentials);
 	}
 
 	handleLogin(log) {
