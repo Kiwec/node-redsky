@@ -68,13 +68,15 @@ MessageHandler.prototype.formatUser = function (msg) {
 };
 
 MessageHandler.prototype.handle = function (msg) {
+  if(typeof msg === 'undefined') return;
+
   if(msg.tms < this.lastTms) return;
   this.lastTms = msg.tms;
 
-	if(msg.message.indexOf('!') === 1) {
-		this.handleCommand(msg);
-		return;
-	}
+  if(msg.message.indexOf('!') === 1) {
+    this.handleCommand(msg);
+    return;
+  }
 
   if(msg.pseudo == 'SkychatBot') {
     this.handleBotMessage(msg);
@@ -84,26 +86,34 @@ MessageHandler.prototype.handle = function (msg) {
 };
 
 MessageHandler.prototype.handleBotMessage = function (msg) {
-	msg.message_type = 'bot_message';
+  msg.message_type = 'bot_message';
   var cleanMsg = this.clean(msg);
 
   // Points transfer
-	if(cleanMsg.indexOf('de commission') !== -1) {
-		var giveMsg = msg.message.match(/<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>/);
-		this.skyChat.eventLoop.fire('givepoints', {
-			from: giveMsg[3],
-			amount: parseInt(giveMsg[2], 10),
-			to: giveMsg[1],
-			commission: giveMsg[4]
-		});
-	// Random number generation
-	} else if(cleanMsg.indexOf('tiré par') !== -1) {
-		var match = cleanMsg.match(/t (.*) t.*?r (.*): (.*)/);
-		this.skyChat.eventLoop.fire('rand', {
-			max: parseInt(match[1], 10),
-			pseudo: match[2],
-			number: parseInt(match[3], 10)
-		});
+  if(cleanMsg.indexOf('de commission') !== -1) {
+    var giveMsg = msg.message.match(/<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>/);
+    this.skyChat.eventLoop.fire('givepoints', {
+      from: giveMsg[3],
+      amount: parseInt(giveMsg[2], 10),
+      to: giveMsg[1],
+      commission: giveMsg[4]
+    });
+  // Random number generation
+  } else if(cleanMsg.indexOf('demandé par') !== -1) {
+    var match = cleanMsg.match(/Nombre entre (\d+) et (\d+) demandé par (.+): (\d+)/);
+    if(!match) {
+      console.error('Failed to match /rand :');
+      console.log(cleanMsg);
+      console.log(msg.message);
+      return;
+    }
+
+    this.skyChat.eventLoop.fire('rand', {
+      min: parseInt(match[1], 10),
+      max: parseInt(match[2], 10),
+      pseudo: match[3],
+      number: match[4]
+    });
   }
 };
 
