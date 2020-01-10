@@ -20,6 +20,8 @@ class Player {
 	}
 
 	update(yt_sync) {
+		if(yt_sync.type != 'youtube') return;
+
 		this.title = yt_sync.title || '';
 		this.position = yt_sync.cursor || 0;
 		this.user = yt_sync.dj || '';

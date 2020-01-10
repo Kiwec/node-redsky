@@ -87,7 +87,7 @@ class SkyChat {
 		this.on('pseudo_info', this.handlePseudoInfo.bind(this));
 		this.on('connected_list', data => this.userList.update_users(data));
 		this.on('typing_list', data => this.userList.update_typing(data));
-		this.on('yt_sync', data => this.player.update(data));
+		this.on('player_sync', data => this.player.update(data));
 		this.on('room_list', (data) => {
 			for(const i in data) {
 				if(data[i].id == this.current_room) {
