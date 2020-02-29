@@ -90,13 +90,13 @@ MessageHandler.prototype.handleBotMessage = function (msg) {
   var cleanMsg = this.clean(msg);
 
   // Points transfer
-  if(cleanMsg.indexOf('de commission') !== -1) {
-    var giveMsg = msg.message.match(/<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>.*<b>(.*)<\/b>/);
+  if(cleanMsg.indexOf(' a donné ') !== -1) {
+    var giveMsg = cleanMsg.match(/(.+) a donné (\d+)\$ à (.+) \( commission (\d+)\$ \)/);
     this.skyChat.eventLoop.fire('givepoints', {
-      from: giveMsg[3],
+      from: giveMsg[1],
       amount: parseInt(giveMsg[2], 10),
-      to: giveMsg[1],
-      commission: giveMsg[4]
+      to: giveMsg[3],
+      commission: parseInt(giveMsg[4], 10)
     });
   // Random number generation
   } else if(cleanMsg.indexOf('demandé par') !== -1) {
