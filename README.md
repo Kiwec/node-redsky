@@ -1,6 +1,6 @@
 # node-skychat
 
-Librairie NodeJS permettant de se connecter au chat skychat.fr.
+Librairie NodeJS permettant de se connecter au skychat.
 
 # Installation
 
@@ -11,17 +11,18 @@ npm i node-skychat
 # Utilisation
 
 ```js
-const SkyChat = require('node-skychat').init({
-	username: 'foo',
-	password: 'bar123'
+const SkyChat = require("node-skychat").init({
+	username: "foo",
+	password: "bar123",
+	url: "adresse-du-skychat.fr"
 });
 
-SkyChat.on('log', () => {
-  SkyChat.send('Hello world !');
+SkyChat.on("log", () => {
+	SkyChat.send("Hello world !");
 });
 
-SkyChat.on('newmessage', (msg) => {
-  console.log(SkyChat.format(msg));
+SkyChat.on("newmessage", msg => {
+	console.log(SkyChat.format(msg));
 });
 ```
 
@@ -29,29 +30,29 @@ SkyChat.on('newmessage', (msg) => {
 
 Certains events sont ajoutes en plus de ceux du tchat :
 
-* command({ msg, user, args, nbArgs }) : apres envoi d'une !commande
+-   command({ msg, user, args, nbArgs }) : apres envoi d'une !commande
 
-* givepoints({ from, amount, to, commission }) : apres envoi de skypoints
+-   givepoints({ from, amount, to, commission }) : apres envoi de skypoints
 
-* list(userlist) : quand un utilisateur rejoint, quitte, ou commence/arrete d'ecrire
+-   list(userlist) : quand un utilisateur rejoint, quitte, ou commence/arrete d'ecrire
 
-* log(credentials) : apres connexion
+-   log(credentials) : apres connexion
 
-* log_once(credentials) : apres connexion, emis une seule fois
+-   log_once(credentials) : apres connexion, emis une seule fois
 
-* newmessage(msg) : quand un nouveau message est recu
+-   newmessage(msg) : quand un nouveau message est recu
 
-* player_next({ id, title, duration, position, user }) : lorsqu'une nouvelle video est jouee
+-   player_next({ id, title, duration, position, user }) : lorsqu'une nouvelle video est jouee
 
-* rand({ max, pseudo, number }) : lorsque /rand est utilise
+-   rand({ max, pseudo, number }) : lorsque /rand est utilise
 
-* room_name(name) : apres avoir rejoint une room
-La room 0 est automatiquement rejointe.
+-   room_name(name) : apres avoir rejoint une room
+    La room 0 est automatiquement rejointe.
 
-* server_info(msg) : message important du serveur
+-   server_info(msg) : message important du serveur
 
-* typing(userlist) : quand un utilisateur commence/arrete d'ecrire
+-   typing(userlist) : quand un utilisateur commence/arrete d'ecrire
 
-* user_join(user) : quand un utilisateur rejoint la room
+-   user_join(user) : quand un utilisateur rejoint la room
 
-* user_leave(user) : quand un utilisateur sort de la room
+-   user_leave(user) : quand un utilisateur sort de la room

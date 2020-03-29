@@ -1,27 +1,27 @@
-const MessageHandler = require('./MessageHandler.js');
-const Player = require('./Player.js');
-const UserList = require('./UserList.js');
+const MessageHandler = require("./MessageHandler.js");
+const Player = require("./Player.js");
+const UserList = require("./UserList.js");
 
 class SkyChat {
 	constructor() {
 		this.messageHandler = new MessageHandler(this);
 		this.messageBuffer = [];
-		this.lastMessage = '!';
+		this.lastMessage = "!";
 		this.current_room = -1;
 		this.first_login = true;
-		this.eventLoop = require('./EventLoop.js');
+		this.eventLoop = require("./EventLoop.js");
 	}
 
 	checkMessageBuffer() {
-		if(this.messageBuffer.length > 0) {
+		if (this.messageBuffer.length > 0) {
 			this.lastMessage = this.messageBuffer.shift();
-			this.sock.emit('message', { message: this.lastMessage });
+			this.sock.emit("message", { message: this.lastMessage });
 		}
 	}
 
 	init(config) {
 		// If the SkyChat object has already been initialized
-		if(typeof this.config !== 'undefined') {
+		if (typeof this.config !== "undefined") {
 			// Return current SkyChat object
 			return this;
 		}
@@ -35,9 +35,11 @@ class SkyChat {
 	}
 
 	initSock() {
-		this.sock = require('socket.io-client').connect('https://skychat.fr:8056');
+		this.sock = require("socket.io-client").connect(
+			this.config.url + ":8056"
+		);
 		this.eventLoop.initSock(this.sock);
-		this.eventLoop.on('connect', this.handleConnect.bind(this));
+		this.eventLoop.on("connect", this.handleConnect.bind(this));
 	}
 
 	fire(name, args) {
@@ -49,74 +51,84 @@ class SkyChat {
 	}
 
 	/**
-	* Obtient le token de login depuis l'API skychat.fr
-	* Appelle callback().
-	* En cas d'erreur : pas d'appel au callback.
-	*/
+	 * Obtient le token de login depuis l'API
+	 * Appelle callback().
+	 * En cas d'erreur : pas d'appel au callback.
+	 */
 	getLoginToken(callback) {
-		const request = require('request');
-		request.post({
-			url: 'https://skychat.fr/ajax/account/api2.php',
-			form: {
-				pseudo: this.config.username,
-				pass: this.config.password
+		const request = require("request");
+		request.post(
+			{
+				url: this.config.url + "/ajax/account/api2.php",
+				form: {
+					pseudo: this.config.username,
+					pass: this.config.password
+				}
+			},
+			(err, res, body) => {
+				if (err) return console.log(err);
+				this.credentials = JSON.parse(body);
+				callback();
 			}
-		}, (err, res, body) => {
-			if(err) return console.log(err);
-			this.credentials = JSON.parse(body);
-			callback();
-		});
+		);
 	}
 
 	handleConnect() {
-		this.sock.emit('log', this.credentials);
-		this.send('/join 0');
+		this.sock.emit("log", this.credentials);
+		this.send("/join 0");
 		this.handleLogin(this.credentials);
 
 		this.pseudo = this.credentials.pseudo;
-		this.fire('log', this.credentials);
+		this.fire("log", this.credentials);
 	}
 
 	handleLogin(log) {
-		if(!this.first_login) return;
+		if (!this.first_login) return;
 
-		this.on('alert', this.handleServerInfo.bind(this));
-		this.on('error', this.handleServerInfo.bind(this));
-		this.on('info', this.handleServerInfo.bind(this));
-		this.on('success', this.handleServerInfo.bind(this));
-		this.on('pseudo_info', this.handlePseudoInfo.bind(this));
-		this.on('connected_list', data => this.userList.update_users(data));
-		this.on('typing_list', data => this.userList.update_typing(data));
-		this.on('player_sync', data => this.player.update(data));
-		this.on('room_list', (data) => {
-			for(const i in data) {
-				if(data[i].id == this.current_room) {
-					this.fire('room_name', data[i].name);
+		this.on("alert", this.handleServerInfo.bind(this));
+		this.on("error", this.handleServerInfo.bind(this));
+		this.on("info", this.handleServerInfo.bind(this));
+		this.on("success", this.handleServerInfo.bind(this));
+		this.on("pseudo_info", this.handlePseudoInfo.bind(this));
+		this.on("connected_list", data => this.userList.update_users(data));
+		this.on("typing_list", data => this.userList.update_typing(data));
+		this.on("player_sync", data => this.player.update(data));
+		this.on("room_list", data => {
+			for (const i in data) {
+				if (data[i].id == this.current_room) {
+					this.fire("room_name", data[i].name);
 					break;
 				}
 			}
 		});
 		setTimeout(() => {
-			this.on('message', this.messageHandler.handle.bind(this.messageHandler));
+			this.on(
+				"message",
+				this.messageHandler.handle.bind(this.messageHandler)
+			);
 		}, 1000);
 		setInterval(this.checkMessageBuffer.bind(this), 400);
 
 		this.first_login = false;
-		this.fire('log_once', log);
+		this.fire("log_once", log);
 	}
 
 	handlePseudoInfo(data) {
-		if(this.current_room != data.current_room) {
+		if (this.current_room != data.current_room) {
 			this.current_room = data.current_room;
-			this.send('/roomlist');
+			this.send("/roomlist");
 		}
 	}
 
 	handleServerInfo(msg) {
-		if(typeof msg.message === 'undefined') return;
-		this.eventLoop.fire('server_info', msg);
+		if (typeof msg.message === "undefined") return;
+		this.eventLoop.fire("server_info", msg);
 		const match = msg.message.match(/attendre (.*?) millis/);
-		if(match && match.length == 2 && typeof this.lastMessage !== 'undefined') {
+		if (
+			match &&
+			match.length == 2 &&
+			typeof this.lastMessage !== "undefined"
+		) {
 			this.messageBuffer.unshift(this.lastMessage);
 		}
 	}
@@ -134,8 +146,10 @@ class SkyChat {
 	}
 
 	sendLater(msg, delay) {
-		if(typeof delay === 'undefined') delay = 1000;
-		setTimeout(() => { this.send(msg); }, delay);
+		if (typeof delay === "undefined") delay = 1000;
+		setTimeout(() => {
+			this.send(msg);
+		}, delay);
 	}
 }
 
